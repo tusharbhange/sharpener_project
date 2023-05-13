@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Manager</title>
+</head>
+<body>
+    <form>
+        <label>Choose Expense Amount</label>
+        <input type="number" name="amount" id="amount"/>
+        <label>Choose Description</label>
+        <input type="text" name="desc" id="desc"/>
+        <label>Choose a category</label>
+        <select name="cat" id="cat">
+            <option value="Movie">Movie</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Travel">Travel</option>
+            <option value="Daily">Daily</option>
+        </select>
+        <input type="submit" value="Add Expense" id="submit-btn" />
+        <br>
+        <br>
+        <p id="print"></p>
+    </form>
+    <script>
+        const submitBtn = document.getElementById('submit-btn');
+        submitBtn.addEventListener('click',enterDetails);
+
+
+        function enterDetails(n)
+        {
+            n.preventDefault();
+
+            const amount = document.getElementById('amount').value;
+            const desc = document.getElementById('desc').value;
+            const cat = document.getElementById('cat').value;
+
+            const key = 'exp_'+ Date.now();
+        
+
+            const exp = {
+                amount : amount,
+                desc: desc,
+                cat:cat
+            };
+
+            localStorage.setItem(key,JSON.stringify(exp));
+
+            displayDetails();
+
+            document.getElementById('amount').value='';
+            document.getElementById('desc').value='';
+            document.getElementById('cat').value='';
+        }
+
+        function deleteItem(key)
+        {
+            localStorage.removeItem(key);
+            displayDetails();
+        }
+
+        function edit(key) {
+            const exp = JSON.parse(localStorage.getItem(key));
+            if (!exp) {
+                return;
+            }
+            const amount = prompt('Enter New Amount:', exp.amount);
+            const desc = prompt('Enter New Description:', exp.desc);
+            const cat = prompt('Enter New Category:', exp.cat);
+
+            if (amount || desc || cat) {
+                const updatedExp = {
+                    amount: amount || exp.amount,
+                    desc: desc || exp.desc,
+                    cat: cat || exp.cat,
+                };
+                localStorage.setItem(key, JSON.stringify(updatedExp));
+                displayDetails();
+            }
+        }
+
+        function displayDetails()
+        {
+            let output='';
+            for(let i=0;i<localStorage.length;i++)
+            {
+                let key = localStorage.key(i);
+                let exp = JSON.parse(localStorage.getItem(key));
+
+                output += `amount: ${exp.amount}, desc: ${exp.desc}, cat: ${exp.cat} <button onclick="deleteItem('${key}')">Delete Expense</button> <button onclick="edit('${key}')">Edit Expense</button><br>`;
+            }
+            document.getElementById("print").innerHTML = output;
+        }
+
+        displayDetails();
+    </script>
+</body>
+</html>
