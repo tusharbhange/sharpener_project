@@ -14,44 +14,46 @@
         }
         .container
         {
-            margin-top: 20%;
             border: 1px;
             border-style: solid;
             border-radius: 1px;
+            padding: 80px 80px;
+        }
+        .container1
+        {
+            margin-left: 11%;
             padding: 80px 80px;
         }
     </style>
 </head>
 <body>
        <div class="container">
-        <form class="row">
-            <div class="row">
-                <label class="col-4" for="amount">Choose Expense Amount</label>
-                <input class="col-8"type="number" name="amount" id="amount" required>
-            </div>
-            <div class="row">
-                <label class="col-4" for="desc">Choose Description</label>
-                <input class="col-8"type="text" name="desc" id="desc" required>
-            </div>
-            <div class="row">
-                <label class="col-4" for="cat">Choose a category</label>
-                <select class="col-8" name="cat" id="cat" required>
-                    <option value="Movie">Movie</option>
-                    <option value="Shopping">Shopping</option>
-                    <option value="Travel">Travel</option>
-                    <option value="Daily">Daily</option>
-                </select>
-            </div>
-            <div class="row">
-                <input class="btn btn-primary" type="submit" value="Add Expense" id="submit-btn" />
-            </div>
-            <br>
-            <br>
-            <p id="print"></p>
-        </form>
-        
-    </div>
-    
+            <form class="row">
+                <div class="row">
+                    <label class="col-4" for="amount">Choose Expense Amount</label>
+                    <input class="col-8"type="number" name="amount" id="amount" required>
+                </div>
+                <div class="row">
+                    <label class="col-4" for="desc">Choose Description</label>
+                    <input class="col-8"type="text" name="desc" id="desc" required>
+                </div>
+                <div class="row">
+                    <label class="col-4" for="cat">Choose a category</label>
+                    <select class="col-8" name="cat" id="cat" required>
+                        <option value="Movie">Movie</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Travel">Travel</option>
+                        <option value="Daily">Daily</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <input class="btn btn-primary" type="submit" value="Add Expense" id="submit-btn" />
+                </div>
+                <br>
+                <br>
+            </form>        
+        </div>
+        <p class="container1" id="print"></p>    
     <script>
         const submitBtn = document.getElementById('submit-btn');
         submitBtn.addEventListener('click',enterDetails);
@@ -117,7 +119,7 @@
                 let key = localStorage.key(i);
                 let exp = JSON.parse(localStorage.getItem(key));
 
-                output += `amount: ${exp.amount}, desc: ${exp.desc}, cat: ${exp.cat} <button onclick="deleteItem('${key}')">Delete Expense</button> <button onclick="edit('${key}')">Edit Expense</button><br>`;
+                output += `<div class="row"> <div class=col-12> <b>Amount</b> = ${exp.amount}, <b>Description</b> = ${exp.desc}, <b>Category</b>: ${exp.cat} <button class="btn btn-danger" onclick="deleteItem('${key}')">Delete Expense</button> <button class="btn btn-primary" onclick="edit('${key}')">Edit Expense</button></div></div>`;
             }
             document.getElementById("print").innerHTML = output;
         }
