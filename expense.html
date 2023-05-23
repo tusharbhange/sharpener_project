@@ -12,35 +12,44 @@
         { 
             padding: 5px;
         }
+        .container
+        {
+            margin-top: 20%;
+            border: 1px;
+            border-style: solid;
+            border-radius: 1px;
+            padding: 80px 80px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+       <div class="container">
         <form class="row">
             <div class="row">
-                <label class="col-6" for="amount">Choose Expense Amount</label>
-                <input class="col-6"type="number" name="amount" id="amount" required>
+                <label class="col-4" for="amount">Choose Expense Amount</label>
+                <input class="col-8"type="number" name="amount" id="amount" required>
             </div>
             <div class="row">
-                <label class="col-6" for="desc">Choose Description</label>
-                <input class="col-6"type="text" name="desc" id="desc" required>
+                <label class="col-4" for="desc">Choose Description</label>
+                <input class="col-8"type="text" name="desc" id="desc" required>
             </div>
             <div class="row">
-                <label class="col-6" for="cat">Choose a category</label>
-                <select class="col-6" name="cat" id="cat" required>
-                    <option class="col-6" value="Movie">Movie</option>
-                    <option class="col-6" value="Shopping">Shopping</option>
-                    <option class="col-6" value="Travel">Travel</option>
-                    <option class="col-6" value="Daily">Daily</option>
+                <label class="col-4" for="cat">Choose a category</label>
+                <select class="col-8" name="cat" id="cat" required>
+                    <option value="Movie">Movie</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Daily">Daily</option>
                 </select>
             </div>
-            <div class="row" style="margin-right: 25%;margin-left: 25%; width: 50%; padding: 5px;">
+            <div class="row">
                 <input class="btn btn-primary" type="submit" value="Add Expense" id="submit-btn" />
             </div>
             <br>
             <br>
             <p id="print"></p>
         </form>
+        
     </div>
     
     <script>
