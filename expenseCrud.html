@@ -1,130 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Manager</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+        crossorigin="anonymous"
+    >
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
-        .row
-        { 
+        .row {
             padding: 5px;
         }
-        .container
-        {
+
+        .container {
             border: 1px;
             border-style: solid;
             border-radius: 1px;
             padding: 80px 80px;
         }
-        .container1
-        {
+
+        .container1 {
             margin-left: 11%;
             padding: 80px 80px;
         }
     </style>
 </head>
+
 <body>
-       <div class="container">
-            <form class="row">
-                <div class="row">
-                    <label class="col-4" for="amount">Choose Expense Amount</label>
-                    <input class="col-8"type="number" name="amount" id="amount" required>
-                </div>
-                <div class="row">
-                    <label class="col-4" for="desc">Choose Description</label>
-                    <input class="col-8"type="text" name="desc" id="desc" required>
-                </div>
-                <div class="row">
-                    <label class="col-4" for="cat">Choose a category</label>
-                    <select class="col-8" name="cat" id="cat" required>
-                        <option value="Movie">Movie</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Travel">Travel</option>
-                        <option value="Daily">Daily</option>
-                    </select>
-                </div>
-                <div class="row">
-                    <input class="btn btn-primary" type="submit" value="Add Expense" id="submit-btn" />
-                </div>
-                <br>
-                <br>
-            </form>        
-        </div>
-        <p class="container1" id="print"></p>    
+    <div class="container">
+        <form class="row">
+            <div class="row">
+                <label class="col-4" for="amount">Choose Expense Amount</label>
+                <input class="col-8" type="number" name="amount" id="amount" required>
+            </div>
+            <div class="row">
+                <label class="col-4" for="desc">Choose Description</label>
+                <input class="col-8" type="text" name="desc" id="desc" required>
+            </div>
+            <div class="row">
+                <label class="col-4" for="cat">Choose a category</label>
+                <select class="col-8" name="cat" id="cat" required>
+                    <option value="Movie">Movie</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Daily">Daily</option>
+                </select>
+            </div>
+            <div class="row">
+                <input class="btn btn-primary" type="submit" value="Add Expense" id="submit-btn" />
+            </div>
+            <br>
+            <br>
+        </form>
+    </div>
+    <p class="container1" id="print"></p>
     <script>
+        const baseUrl = 'https://crudcrud.com/api/a1e0294e462d4a82a266322dd817c4a9/appointmentdata';
         const submitBtn = document.getElementById('submit-btn');
-        submitBtn.addEventListener('click',enterDetails);
+        submitBtn.addEventListener('click', enterDetails);
 
-
-        function enterDetails(n)
-        {
-            n.preventDefault();
+        function enterDetails(event) {
+            event.preventDefault();
 
             const amount = document.getElementById('amount').value;
             const desc = document.getElementById('desc').value;
             const cat = document.getElementById('cat').value;
 
-            const key = 'exp_'+ Date.now();
-        
-
             const exp = {
-                amount : amount,
+                amount: amount,
                 desc: desc,
-                cat:cat
+                cat: cat
             };
 
-            localStorage.setItem(key,JSON.stringify(exp));
+            axios.post(baseUrl, exp)
+                .then((response) => {
+                    displayDetails();
+                    console.log(response);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
 
-            displayDetails();
-
-            document.getElementById('amount').value='';
-            document.getElementById('desc').value='';
-            document.getElementById('cat').value='';
+            document.getElementById('amount').value = '';
+            document.getElementById('desc').value = '';
+            document.getElementById('cat').value = '';
         }
 
-        function deleteItem(key)
-        {
-            localStorage.removeItem(key);
-            displayDetails();
+        function deleteItem(key) {
+            axios.delete(baseUrl + '/' + key)
+                .then((response) => {
+                    displayDetails();
+                    console.log(response);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
 
         function edit(key) {
-            const exp = JSON.parse(localStorage.getItem(key));
-            if (!exp) {
-                return;
-            }
-            const amount = prompt('Enter New Amount:', exp.amount);
-            const desc = prompt('Enter New Description:', exp.desc);
-            const cat = prompt('Enter New Category:', exp.cat);
+            const amount = prompt('Enter New Amount:');
+            const desc = prompt('Enter New Description:');
+            const cat = prompt('Enter New Category:');
 
             if (amount || desc || cat) {
                 const updatedExp = {
-                    amount: amount || exp.amount,
-                    desc: desc || exp.desc,
-                    cat: cat || exp.cat,
+                    amount: amount || '',
+                    desc: desc || '',
+                    cat: cat || '',
                 };
-                localStorage.setItem(key, JSON.stringify(updatedExp));
-                displayDetails();
+
+                axios.put(baseUrl + '/' + key, updatedExp)
+                    .then((response) => {
+                        displayDetails();
+                        console.log(response);
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
             }
         }
 
-        function displayDetails()
-        {
-            let output='';
-            for(let i=0;i<localStorage.length;i++)
-            {
-                let key = localStorage.key(i);
-                let exp = JSON.parse(localStorage.getItem(key));
+        function displayDetails() {
+            axios.get(baseUrl)
+                .then((response) => {
+                    let output = '';
+                    const expenses = response.data;
 
-                output += `<div class="row"> <div class=col-12> <b>Amount</b> = ${exp.amount}, <b>Description</b> = ${exp.desc}, <b>Category</b>: ${exp.cat} <button class="btn btn-danger" onclick="deleteItem('${key}')">Delete Expense</button> <button class="btn btn-primary" onclick="edit('${key}')">Edit Expense</button></div></div>`;
-            }
-            document.getElementById("print").innerHTML = output;
+                    for (let i = 0; i < expenses.length; i++) {
+                        const exp = expenses[i];
+                        const key = exp._id;
+
+                        output += `<div class="row"> <div class=col-12> <b>Amount</b> = ${exp.amount}, <b>Description</b> = ${exp.desc}, <b>Category</b>: ${exp.cat} <button class="btn btn-danger" onclick="deleteItem('${key}')">Delete Expense</button> <button class="btn btn-primary" onclick="edit('${key}')">Edit Expense</button></div></div>`;
+                    }
+
+                    document.getElementById("print").innerHTML = output;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
 
         displayDetails();
     </script>
 </body>
+
 </html>
